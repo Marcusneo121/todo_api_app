@@ -1,0 +1,17 @@
+/Users/marcusneo/Documents/Dev/DOTNET/TodoNoteApp/todo_api_app/out2/todo_api_app
+/Users/marcusneo/Documents/Dev/DOTNET/TodoNoteApp/todo_api_app/out2/out/web.config
+/Users/marcusneo/Documents/Dev/DOTNET/TodoNoteApp/todo_api_app/out2/appsettings.Development.json
+/Users/marcusneo/Documents/Dev/DOTNET/TodoNoteApp/todo_api_app/out2/appsettings.json
+/Users/marcusneo/Documents/Dev/DOTNET/TodoNoteApp/todo_api_app/out2/out/appsettings.Development.json
+/Users/marcusneo/Documents/Dev/DOTNET/TodoNoteApp/todo_api_app/out2/out/appsettings.json
+/Users/marcusneo/Documents/Dev/DOTNET/TodoNoteApp/todo_api_app/out2/out/todo_api_app.deps.json
+/Users/marcusneo/Documents/Dev/DOTNET/TodoNoteApp/todo_api_app/out2/out/todo_api_app.runtimeconfig.json
+/Users/marcusneo/Documents/Dev/DOTNET/TodoNoteApp/todo_api_app/out2/todo_api_app.dll
+/Users/marcusneo/Documents/Dev/DOTNET/TodoNoteApp/todo_api_app/out2/todo_api_app.deps.json
+/Users/marcusneo/Documents/Dev/DOTNET/TodoNoteApp/todo_api_app/out2/todo_api_app.runtimeconfig.json
+/Users/marcusneo/Documents/Dev/DOTNET/TodoNoteApp/todo_api_app/out2/todo_api_app.pdb
+/Users/marcusneo/Documents/Dev/DOTNET/TodoNoteApp/todo_api_app/out2/Microsoft.AspNetCore.OpenApi.dll
+/Users/marcusneo/Documents/Dev/DOTNET/TodoNoteApp/todo_api_app/out2/Microsoft.OpenApi.dll
+/Users/marcusneo/Documents/Dev/DOTNET/TodoNoteApp/todo_api_app/out2/Swashbuckle.AspNetCore.Swagger.dll
+/Users/marcusneo/Documents/Dev/DOTNET/TodoNoteApp/todo_api_app/out2/Swashbuckle.AspNetCore.SwaggerGen.dll
+/Users/marcusneo/Documents/Dev/DOTNET/TodoNoteApp/todo_api_app/out2/Swashbuckle.AspNetCore.SwaggerUI.dll
