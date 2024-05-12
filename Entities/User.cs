@@ -17,8 +17,11 @@ public class User
     [Column("password")]
     public required string Password { get; set; }
 
+    [Column("password_salt")]
+    public required string PasswordSalt { get; set; }
+
     //This 2 below is One to One Relationship
     //This is how it works in CS
-    public int UserTokenId { get; set; }
+    public int? UserTokenId { get; set; }
     public UserToken? UserToken { get; set; }
 }
