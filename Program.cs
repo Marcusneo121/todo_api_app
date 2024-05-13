@@ -1,7 +1,11 @@
 using System.Net;
 using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using todo_api_app.Data;
+using todo_api_app.Utils;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,9 +16,44 @@ builder.Services.AddSwaggerGen();
 
 var configuration = builder.Configuration;
 builder.Services.AddDbContext<DBContext>(options => options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
+//Put the appsettings key value into Configuration instead of Environment Variable
 builder.Configuration.AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json",
         optional: false,
         reloadOnChange: true).AddEnvironmentVariables();
+
+// Console.WriteLine($"Ori Salt: {configuration["JWT:Secret"]}");
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options =>
+{
+    options.RequireHttpsMetadata = false;
+    options.SaveToken = true;
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = configuration["JWT:Issuer"],
+        ValidAudience = configuration["JWT:Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"]!)),
+        ClockSkew = TimeSpan.Zero
+    };
+});
+
+// Configure the default authorization policy
+builder.Services.AddAuthorization(options =>
+{
+    options.DefaultPolicy = new AuthorizationPolicyBuilder()
+            .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
+            .RequireAuthenticatedUser()
+            .Build();
+
+});
+
+//Setting up service for Dependency Injection
+builder.Services.AddScoped<JWTManagerUtils>();
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())

@@ -20,11 +20,13 @@ public class EnvironmentController : ControllerBase
     {
         var envname = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
         var appsettingsData = _configuration.GetConnectionString("DefaultConnection");
+        var jwt_secret = _configuration["JWT:Secret"];
 
         var response = new
         {
             env = envname,
-            appsettingdata = appsettingsData
+            appsettingdata = appsettingsData,
+            jwt_secret_data = jwt_secret,
         };
 
         return Ok(response);

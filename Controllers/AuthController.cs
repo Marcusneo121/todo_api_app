@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using todo_api_app.Data;
@@ -14,12 +15,14 @@ public class AuthController : ControllerBase
     private readonly ILogger<TodoController> _logger;
     private readonly IConfiguration _configuration;
     private readonly DBContext _dbContext;
+    private readonly JWTManagerUtils _jwtManagerUtils;
     const string GetUserEndpointName = "GetUser";
-    public AuthController(ILogger<TodoController> logger, IConfiguration configuration, DBContext dBContext)
+    public AuthController(ILogger<TodoController> logger, IConfiguration configuration, DBContext dBContext, JWTManagerUtils jwtManagerUtils)
     {
         _logger = logger;
         _configuration = configuration;
         _dbContext = dBContext;
+        _jwtManagerUtils = jwtManagerUtils;
     }
 
     // POST sign-up
@@ -41,8 +44,6 @@ public class AuthController : ControllerBase
         }
 
         byte[] salted = AuthUtils.SaltProvider();
-        // string saltedString = Convert.ToBase64String(salted);
-        // byte[] testSalt = Convert.FromBase64String(saltedString);
 
         var userData = new User()
         {
@@ -59,32 +60,14 @@ public class AuthController : ControllerBase
         return Ok(new
         {
             data = userData,
+            status = 200,
             message = "Sign up successful.",
         });
-        // return Results.CreatedAtRoute(GetUserEndpointName, new { id = userData.Id }, userData);
-        // var users = await _dbContext.Users
-        // .Where(u => u.Name == signUp.Name)
-        // .Select(u => new
-        // {
-        //     u.Id,
-        //     u.Name,
-        //     u.Email,
-        //     u.Password
-        // })
-        // .ToListAsync();
-        // if (users == null || !users.Any())
-        // {
-        //     // User not found, return a custom JSON response
-        //     return Ok(new { message = "User not found" });
-        // }
-        // User found, return the user object
-        // return Ok(new { data = users, message = "Sign up successful." });
     }
 
     // POST login
     [HttpPost("login")]
-    // public void Login([FromBody] string value)
-    public ActionResult Login(LoginDto login)
+    public async Task<ActionResult> Login(LoginDto login)
     {
 
         var emailCheck = _dbContext.Users.Where(x => x.Email == login.Email).ToListAsync().Result;
@@ -97,22 +80,61 @@ public class AuthController : ControllerBase
             if (saltUserInputPassword == userExtractedData.Password)
             {
                 // Can generate Refresh and Access Token Already
-                return Ok(new
+                string? acccessTokenGenerated = _jwtManagerUtils.GenerateAccessToken(
+                    new AccessTokenDto(Id: userExtractedData.Id,
+                    Name: userExtractedData.Name,
+                    Email: userExtractedData.Email
+                    )
+                );
+
+                RefreshTokenDto? refreshTokenGenerated = _jwtManagerUtils.GenerateRefreshToken(
+                    new AccessTokenDto(Id: userExtractedData.Id,
+                    Name: userExtractedData.Name,
+                    Email: userExtractedData.Email)
+                );
+
+                if (acccessTokenGenerated != null && refreshTokenGenerated != null)
                 {
-                    data = new
+
+                    var userTokenData = new UserToken()
                     {
-                        emailCheck.First().Password,
-                        emailCheck.First().PasswordSalt,
-                        saltUserInputPassword
-                    },
-                    message = "Login successfully.",
-                });
+                        RefreshToken = refreshTokenGenerated.RefreshToken,
+                        ExpiredDate = refreshTokenGenerated.ExpiredDate,
+                        IsTokenValid = true,
+                    };
+
+                    var entityToUpdate = _dbContext.Users.FirstOrDefault(e => e.Id == userExtractedData.Id);
+                    if (entityToUpdate != null)
+                    {
+                        entityToUpdate.UserToken = userTokenData;
+                    }
+                    await _dbContext.SaveChangesAsync();
+
+                    return Ok(new
+                    {
+                        data = new
+                        {
+                            access_token = acccessTokenGenerated,
+                            refresh_token = refreshTokenGenerated.RefreshToken,
+                            refresh_expiration_date = refreshTokenGenerated.ExpiredDate,
+                        },
+                        status = 200,
+                        message = "Login successfully.",
+                    });
+                }
+                else
+                {
+                    return Unauthorized(new
+                    {
+                        status = 401,
+                        message = "User doesn't exist",
+                    });
+                }
             }
             else
             {
                 return Unauthorized(new
                 {
-                    // data = emailCheck,
                     status = 401,
                     message = "Password incorrect. Please try again.",
                 });
@@ -122,27 +144,56 @@ public class AuthController : ControllerBase
         {
             return BadRequest(new
             {
-                // data = emailCheck,
                 status = 400,
                 message = "This account doesn't exist.",
             });
         }
-
-        // return Ok(new
-        // {
-        //     data = login,
-        //     message = "Login Ok",
-        // });
     }
 
     // Get Access Token (a.k.a generate-token)
     [HttpGet("generate-token")]
-    public ActionResult GenerateToken(LoginDto login)
+    public ActionResult GenerateToken(GenerateTokenDto gt)
     {
-        return Ok(new
+        try
         {
-            // data = login,
-            message = "Ok",
-        });
+            ClaimsPrincipal claims = _jwtManagerUtils.ValidateExtractRefreshTokenIdentity(gt.RefreshToken);
+            Console.WriteLine($"Claims: {claims.Identity?.IsAuthenticated}");
+            Console.WriteLine($"Claims: {claims.FindFirst(ClaimTypes.Name)?.Value!}");
+
+            string? name = claims.FindFirst(ClaimTypes.Name)?.Value!;
+            string? id = claims.FindFirst(ClaimTypes.Sid)?.Value!;
+            string? email = claims.FindFirst(ClaimTypes.Email)?.Value!;
+
+            if (name != null && id != null && email != null)
+            {
+                string? acccessTokenGenerated = _jwtManagerUtils.GenerateAccessToken(
+                                    new AccessTokenDto(Id: int.Parse(id),
+                                    Name: name,
+                                    Email: email));
+
+                return Ok(new
+                {
+                    access_token = acccessTokenGenerated,
+                    status = 200,
+                    message = "Ok",
+                });
+            }
+            else
+            {
+                return Unauthorized(new
+                {
+                    status = 401,
+                    message = "Invalid Refresh Token.",
+                });
+            }
+        }
+        catch (Exception ex)
+        {
+            return Unauthorized(new
+            {
+                status = 401,
+                message = ex.Message,
+            });
+        }
     }
 }

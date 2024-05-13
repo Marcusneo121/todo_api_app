@@ -12,7 +12,7 @@ public class UserToken
     public string? RefreshToken { get; set; }
 
     [Column("expired_date")]
-    public DateOnly ExpiredDate { get; set; }
+    public DateTime? ExpiredDate { get; set; }
 
     [Column("is_token_valid")]
     public bool IsTokenValid { get; set; }
