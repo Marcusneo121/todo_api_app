@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "5iR2ydsQk1TCca/MDrY2jCpWtk0IxJFjQuaUGactyDaXRXU0CqdKepbvnBVIOOIrNQJz+DWJbEKYIjrNxan2Jw==",
+  "dgSpecHash": "pMkjxB4cl+9XojFqlw+nVBjV8e9C8W8U5bK29T4Rwh+RkANBxzLuYf7YCSJ1GuW7gNj1Pu6T6E9EN7Lev0UqHA==",
   "success": true,
   "projectFilePath": "/Users/marcusneo/Documents/Dev/DOTNET/TodoNoteApp/todo_api_app/todo_api_app.csproj",
   "expectedPackageFiles": [
@@ -37,6 +37,7 @@
     "/Users/marcusneo/.nuget/packages/microsoft.identitymodel.tokens/7.5.1/microsoft.identitymodel.tokens.7.5.1.nupkg.sha512",
     "/Users/marcusneo/.nuget/packages/microsoft.openapi/1.4.3/microsoft.openapi.1.4.3.nupkg.sha512",
     "/Users/marcusneo/.nuget/packages/mono.texttemplating/2.2.1/mono.texttemplating.2.2.1.nupkg.sha512",
+    "/Users/marcusneo/.nuget/packages/newtonsoft.json/13.0.3/newtonsoft.json.13.0.3.nupkg.sha512",
     "/Users/marcusneo/.nuget/packages/npgsql/8.0.2/npgsql.8.0.2.nupkg.sha512",
     "/Users/marcusneo/.nuget/packages/npgsql.entityframeworkcore.postgresql/8.0.2/npgsql.entityframeworkcore.postgresql.8.0.2.nupkg.sha512",
     "/Users/marcusneo/.nuget/packages/swashbuckle.aspnetcore/6.4.0/swashbuckle.aspnetcore.6.4.0.nupkg.sha512",

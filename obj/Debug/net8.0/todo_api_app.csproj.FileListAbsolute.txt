@@ -113,3 +113,4 @@
 /Users/marcusneo/Documents/Dev/DOTNET/TodoNoteApp/todo_api_app/bin/Debug/net8.0/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
 /Users/marcusneo/Documents/Dev/DOTNET/TodoNoteApp/todo_api_app/bin/Debug/net8.0/Microsoft.IdentityModel.Tokens.dll
 /Users/marcusneo/Documents/Dev/DOTNET/TodoNoteApp/todo_api_app/bin/Debug/net8.0/System.IdentityModel.Tokens.Jwt.dll
+/Users/marcusneo/Documents/Dev/DOTNET/TodoNoteApp/todo_api_app/bin/Debug/net8.0/Newtonsoft.Json.dll

@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using todo_api_app.Data;
@@ -79,6 +80,18 @@ public class AuthController : ControllerBase
 
             if (saltUserInputPassword == userExtractedData.Password)
             {
+
+                var refreshTokenValidCheck = _dbContext.Users
+                .Include(u => u.UserToken)
+                .FirstOrDefault(u => u.Id == userExtractedData.Id);
+
+                if (refreshTokenValidCheck?.UserToken?.IsTokenValid == true)
+                {
+                    refreshTokenValidCheck.UserToken!.IsTokenValid = false;
+                    await _dbContext.SaveChangesAsync();
+                }
+
+
                 // Can generate Refresh and Access Token Already
                 string? acccessTokenGenerated = _jwtManagerUtils.GenerateAccessToken(
                     new AccessTokenDto(Id: userExtractedData.Id,
@@ -95,7 +108,7 @@ public class AuthController : ControllerBase
 
                 if (acccessTokenGenerated != null && refreshTokenGenerated != null)
                 {
-
+                    //Update old Refresh Token isValid Column to false;
                     var userTokenData = new UserToken()
                     {
                         RefreshToken = refreshTokenGenerated.RefreshToken,
@@ -166,17 +179,43 @@ public class AuthController : ControllerBase
 
             if (name != null && id != null && email != null)
             {
-                string? acccessTokenGenerated = _jwtManagerUtils.GenerateAccessToken(
-                                    new AccessTokenDto(Id: int.Parse(id),
-                                    Name: name,
-                                    Email: email));
 
-                return Ok(new
+                var tokenValidCheck = _dbContext.Users
+                .Include(u => u.UserToken)
+                .FirstOrDefault(u => u.Id == int.Parse(id));
+
+                if (tokenValidCheck == null)
                 {
-                    access_token = acccessTokenGenerated,
-                    status = 200,
-                    message = "Ok",
-                });
+                    return BadRequest(new
+                    {
+                        status = 400,
+                        message = "User not found.",
+                    });
+                }
+                else
+                {
+                    if (tokenValidCheck.UserToken?.IsTokenValid == false)
+                    {
+                        return Unauthorized(new
+                        {
+                            status = 401,
+                            message = "Invalid Refresh Token.",
+                        });
+                    }
+                    else
+                    {
+                        string? acccessTokenGenerated = _jwtManagerUtils.GenerateAccessToken(
+                                            new AccessTokenDto(Id: int.Parse(id),
+                                            Name: name,
+                                            Email: email));
+                        return Ok(new
+                        {
+                            access_token = acccessTokenGenerated,
+                            status = 200,
+                            message = "Ok",
+                        });
+                    }
+                }
             }
             else
             {
@@ -193,6 +232,34 @@ public class AuthController : ControllerBase
             {
                 status = 401,
                 message = ex.Message,
+            });
+        }
+    }
+
+    [HttpPost("logout")]
+    [Authorize]
+    public async Task<ActionResult> Logout()
+    {
+        int userId = int.Parse(HttpContext.Items["user_id"]?.ToString()!);
+        var userToUpdate = _dbContext.Users
+                .Include(u => u.UserToken)
+                .FirstOrDefault(u => u.Id == userId);
+        if (userToUpdate == null)
+        {
+            return BadRequest(new
+            {
+                status = 400,
+                message = "User not found.",
+            });
+        }
+        else
+        {
+            userToUpdate.UserToken!.IsTokenValid = false;
+            await _dbContext.SaveChangesAsync();
+            return Ok(new
+            {
+                status = 200,
+                message = "Logout successfully.",
             });
         }
     }

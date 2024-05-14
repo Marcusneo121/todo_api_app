@@ -1,7 +1,10 @@
+global using todo_api_app.Decorators;
+
 using System.Net;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using todo_api_app.Data;
@@ -53,6 +56,11 @@ builder.Services.AddAuthorization(options =>
 
 //Setting up service for Dependency Injection
 builder.Services.AddScoped<JWTManagerUtils>();
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add<AuthorizeFilterMiddleware>();
+});
+
 
 var app = builder.Build();
 
@@ -64,6 +72,7 @@ if (app.Environment.IsDevelopment())
 }
 await app.MigrateDbAsync();
 app.UseHttpsRedirection();
+app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 app.Run();

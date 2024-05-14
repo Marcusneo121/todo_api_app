@@ -24,4 +24,5 @@ public class User
     //This is how it works in CS
     public int? UserTokenId { get; set; }
     public UserToken? UserToken { get; set; }
+    public List<Todo> Todos { get; set; } = new();
 }
