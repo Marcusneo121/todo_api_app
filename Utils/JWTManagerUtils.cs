@@ -37,7 +37,7 @@ public class JWTManagerUtils
             };
 
             var identity = new ClaimsIdentity(claims);
-            DateTime expirationDate = DateTime.UtcNow.AddDays(60);
+            DateTime expirationDate = DateTime.UtcNow.AddDays(int.Parse(_configuration["JWT:Refresh_Secret_Day"]!));
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Issuer = _configuration["JWT:Issuer"],
@@ -82,7 +82,7 @@ public class JWTManagerUtils
                 Issuer = _configuration["JWT:Issuer"],
                 Audience = _configuration["JWT:Audience"],
                 Subject = identity,
-                Expires = DateTime.UtcNow.AddSeconds(50),
+                Expires = DateTime.UtcNow.AddSeconds(int.Parse(_configuration["JWT:Secret_Second"]!)),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
 
