@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace todo_api_app.Dtos;
 
-public record class GenerateTokenDto
+public record class GenerateTokenRequestDto
 {
     [Required]
     [JsonPropertyName("refresh_token")]
@@ -13,7 +13,7 @@ public record class GenerateTokenDto
     [JsonPropertyName("access_token")]
     public string AccessToken { get; init; }
 
-    public GenerateTokenDto(string refreshToken, string accessToken)
+    public GenerateTokenRequestDto(string refreshToken, string accessToken)
     {
         RefreshToken = refreshToken;
         AccessToken = accessToken;

@@ -23,7 +23,7 @@ public class JWTManagerUtils
         _dbContext = dBContext;
     }
 
-    public RefreshTokenDto? GenerateRefreshToken(AccessTokenDto accessTokenDto)
+    public RefreshTokenDto? GenerateRefreshToken(AccessTokenRequestDto accessTokenDto)
     {
         try
         {
@@ -62,7 +62,7 @@ public class JWTManagerUtils
         // }
     }
 
-    public string? GenerateAccessToken(AccessTokenDto accessTokenDto)
+    public string? GenerateAccessToken(AccessTokenRequestDto accessTokenDto)
     {
         try
         {

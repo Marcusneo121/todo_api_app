@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace todo_api_app.Dtos;
 
-public record class TodoDto
+public record class TodoRequestDto
 {
     [JsonPropertyName("title")]
     public string? Title { get; set; }

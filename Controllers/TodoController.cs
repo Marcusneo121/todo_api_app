@@ -109,7 +109,7 @@ public class TodoController : ControllerBase
     // POST api/todo
     [HttpPost]
     [Authorize]
-    public async Task<ActionResult<Todo>> Post(TodoDto todoDto)
+    public async Task<ActionResult<Todo>> Post(TodoRequestDto todoDto)
     {
         int userId = int.Parse(HttpContext.Items["user_id"]?.ToString()!);
 

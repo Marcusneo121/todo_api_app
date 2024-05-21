@@ -28,7 +28,7 @@ public class AuthController : ControllerBase
 
     // POST sign-up
     [HttpPost("signup")]
-    public async Task<ActionResult<IEnumerable<User>>> Signup(SignUpDto signUp)
+    public async Task<ActionResult<IEnumerable<User>>> Signup(SignUpRequestDto signUp)
     {
 
         var emailCheck = _dbContext.Users.Where(x => x.Email == signUp.Email).ToListAsync().Result;
@@ -68,7 +68,7 @@ public class AuthController : ControllerBase
 
     // POST login
     [HttpPost("login")]
-    public async Task<ActionResult> Login(LoginDto login)
+    public async Task<ActionResult> Login(LoginRequestDto login)
     {
 
         var emailCheck = _dbContext.Users.Where(x => x.Email == login.Email).ToListAsync().Result;
@@ -94,14 +94,14 @@ public class AuthController : ControllerBase
 
                 // Can generate Refresh and Access Token Already
                 string? acccessTokenGenerated = _jwtManagerUtils.GenerateAccessToken(
-                    new AccessTokenDto(Id: userExtractedData.Id,
+                    new AccessTokenRequestDto(Id: userExtractedData.Id,
                     Name: userExtractedData.Name,
                     Email: userExtractedData.Email
                     )
                 );
 
                 RefreshTokenDto? refreshTokenGenerated = _jwtManagerUtils.GenerateRefreshToken(
-                    new AccessTokenDto(Id: userExtractedData.Id,
+                    new AccessTokenRequestDto(Id: userExtractedData.Id,
                     Name: userExtractedData.Name,
                     Email: userExtractedData.Email)
                 );
@@ -165,7 +165,7 @@ public class AuthController : ControllerBase
 
     // Get Access Token (a.k.a generate-token)
     [HttpGet("generate-token")]
-    public ActionResult GenerateToken(GenerateTokenDto gt)
+    public ActionResult GenerateToken(GenerateTokenRequestDto gt)
     {
         try
         {
@@ -205,7 +205,7 @@ public class AuthController : ControllerBase
                     else
                     {
                         string? acccessTokenGenerated = _jwtManagerUtils.GenerateAccessToken(
-                                            new AccessTokenDto(Id: int.Parse(id),
+                                            new AccessTokenRequestDto(Id: int.Parse(id),
                                             Name: name,
                                             Email: email));
                         return Ok(new
