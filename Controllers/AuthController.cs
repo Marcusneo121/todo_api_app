@@ -60,7 +60,7 @@ public class AuthController : ControllerBase
 
         return Ok(new
         {
-            data = userData,
+            // data = userData,
             status = 200,
             message = "Sign up successful.",
         });

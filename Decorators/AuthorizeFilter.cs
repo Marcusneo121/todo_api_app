@@ -30,6 +30,14 @@ public class AuthorizeFilterMiddleware : IAuthorizationFilter
                     var claimsPrincipal = _jwtManagerUtils.ValidateExtractAccessTokenIdentity(token);
                     var userId = claimsPrincipal.FindFirst(ClaimTypes.Sid)?.Value;
                     context.HttpContext.Items["user_id"] = userId;
+
+                    var claims = new List<Claim>
+                    {
+                        new Claim(ClaimTypes.Sid, userId!),
+                    };
+                    var identity = new ClaimsIdentity(claims, "user_id_data");
+                    var principal = new ClaimsPrincipal(identity);
+                    context.HttpContext.User = principal;
                 }
                 catch (Exception)
                 {

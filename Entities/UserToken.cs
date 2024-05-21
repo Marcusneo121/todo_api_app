@@ -3,10 +3,10 @@ namespace todo_api_app.Entities;
 using System.ComponentModel.DataAnnotations.Schema;
 
 [Table("user_token")]
-public class UserToken
+public class UserToken : BaseEntity
 {
-    [Column("id")]
-    public int Id { get; set; }
+    // [Column("id")]
+    // public int Id { get; set; }
 
     [Column("refresh_token")]
     public string? RefreshToken { get; set; }

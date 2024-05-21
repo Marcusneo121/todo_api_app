@@ -3,10 +3,10 @@ namespace todo_api_app.Entities;
 using System.ComponentModel.DataAnnotations.Schema;
 
 [Table("users")]
-public class User
+public class User: BaseEntity
 {
-    [Column("id")]
-    public int Id { get; set; }
+    // [Column("id")]
+    // public int Id { get; set; }
 
     [Column("name")]
     public required string Name { get; set; }

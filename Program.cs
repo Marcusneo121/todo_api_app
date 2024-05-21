@@ -56,6 +56,8 @@ builder.Services.AddAuthorization(options =>
 
 //Setting up service for Dependency Injection
 builder.Services.AddScoped<JWTManagerUtils>();
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<UserContextService>();
 builder.Services.AddControllers(options =>
 {
     options.Filters.Add<AuthorizeFilterMiddleware>();

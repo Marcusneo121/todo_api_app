@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using todo_api_app.Data;
@@ -11,9 +12,11 @@ using todo_api_app.Data;
 namespace todo_api_app.Data.Migrations
 {
     [DbContext(typeof(DBContext))]
-    partial class DBContextModelSnapshot : ModelSnapshot
+    [Migration("20240521043721_AddBaseEntity")]
+    partial class AddBaseEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -36,7 +39,8 @@ namespace todo_api_app.Data.Migrations
                         .HasColumnName("created_at");
 
                     b.Property<int>("CreatedBy")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("created_by");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -56,7 +60,8 @@ namespace todo_api_app.Data.Migrations
                         .HasColumnName("updated_at");
 
                     b.Property<int>("UpdatedBy")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("updated_by");
 
                     b.Property<int>("UserId")
                         .HasColumnType("integer")
@@ -83,7 +88,8 @@ namespace todo_api_app.Data.Migrations
                         .HasColumnName("created_at");
 
                     b.Property<int>("CreatedBy")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("created_by");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -110,7 +116,8 @@ namespace todo_api_app.Data.Migrations
                         .HasColumnName("updated_at");
 
                     b.Property<int>("UpdatedBy")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("updated_by");
 
                     b.Property<int?>("UserTokenId")
                         .HasColumnType("integer");
@@ -136,7 +143,8 @@ namespace todo_api_app.Data.Migrations
                         .HasColumnName("created_at");
 
                     b.Property<int>("CreatedBy")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("created_by");
 
                     b.Property<DateTime?>("ExpiredDate")
                         .HasColumnType("timestamp with time zone")
@@ -155,7 +163,8 @@ namespace todo_api_app.Data.Migrations
                         .HasColumnName("updated_at");
 
                     b.Property<int>("UpdatedBy")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("updated_by");
 
                     b.HasKey("Id");
 
